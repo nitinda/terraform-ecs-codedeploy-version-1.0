@@ -1,0 +1,14 @@
+[
+    {
+        "image": "${nginx_image_url}",
+        "name": "${nginx_container_name}",
+        "essential": true,
+        "portMappings": [
+            {
+                "hostPort": ${nginx_container_host_port},
+                "containerPort": ${nginx_container_container_port},
+                "protocol": "tcp"
+            }
+        ]
+    }
+]
