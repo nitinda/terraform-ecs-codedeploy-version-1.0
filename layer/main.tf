@@ -104,9 +104,8 @@ module "aws_resources_module_ecs_cluster_ec2" {
   public_subnet_ids         = "${module.aws_resources_module_network.public_subnet_ids}"
   public_subnet_cidr_blocks = "${module.aws_resources_module_network.public_subnet_cidr_blocks}"
   ecs_instance_profile_name = "${module.aws_resources_module_iam_ecs.ecs_instance_profile_name}"
-  override_instance_types   = ["t3.xlarge", "t3.large"]
+  override_instance_types   = ["t3.large", "t3a.large", "m5a.large", "m5.large"]
 }
-
 
 module "aws_resources_module_ecs_cluster_ec2_autoscalling_policy" {
   source  = "../module_autoscalling_policy"
@@ -124,7 +123,6 @@ module "aws_resources_module_ecs_cluster_ec2_autoscalling_policy" {
   simplescaling_enabled   = false
   targettrackingscaling_enabled = true
 }
-
 
 ############################################################################################
 #############################  Nginx on ECS EC2  ###################################
