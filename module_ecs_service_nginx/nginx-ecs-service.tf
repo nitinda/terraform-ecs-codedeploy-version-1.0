@@ -19,7 +19,7 @@ resource "aws_ecs_service" "demo_ecs_service_nginx" {
   }
 
   deployment_controller {
-    type = "CODE_DEPLOY"
+    type = "ECS"
   }
 
   # Work Arround

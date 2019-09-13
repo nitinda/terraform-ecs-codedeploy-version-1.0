@@ -8,10 +8,11 @@ resource "aws_alb_listener" "demo_alb_listener_ecs_nginx_front_end_http" {
         type             = "forward"
     }
 
-    # # Work Arround
-    # lifecycle {
-    #     ignore_changes = ["action.0.target_group_arn",]
-    # }
+    lifecycle {
+        ignore_changes = [
+            "default_action.0.target_group_arn",
+        ]
+    }
 }
 
 resource "aws_alb_listener" "demo_alb_listener_ecs_nginx_test_front_end_http" {
@@ -24,8 +25,9 @@ resource "aws_alb_listener" "demo_alb_listener_ecs_nginx_test_front_end_http" {
         type             = "forward"
     }
 
-    # # Work Arround
-    # lifecycle {
-    #     ignore_changes = ["action.0.target_group_arn",]
-    # }
+    lifecycle {
+        ignore_changes = [
+            "default_action.0.target_group_arn",
+        ]
+    }
 }
