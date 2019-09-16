@@ -77,16 +77,24 @@ module "aws_resources_module_codedeploy_app_ecs_service_nginx" {
 
 ########################## Network
 
-module "aws_resources_module_network" {
-  source  = "../module_network"
+module "network" {
+  source               = "git::https://github.com/nitinda/terraform_aws_module_network.git?ref=master"
 
   providers = {
     "aws"  = "aws.aws_services"
   }
 
+  cidr_block           = "10.20.0.0/16"
+  enable_dns_hostnames = true
+  # Subnet
+  public_subnets_cidr  = ["10.20.1.0/24", "10.20.2.0/24"]
+  private_subnets_cidr = ["10.20.3.0/24", "10.20.4.0/24"]
+  db_subnets_cidr      = ["10.20.5.0/24", "10.20.6.0/24"]
+  availability_zones   = ["eu-central-1a", "eu-central-1b"]
+
+  # Tags
   common_tags = "${var.common_tags}"
 }
-
 
 ########################## ECS on EC2
 
@@ -99,10 +107,10 @@ module "aws_resources_module_ecs_cluster_ec2" {
 
   common_tags               = "${var.common_tags}"
   ecs_cluster_name          = "${var.ecs_cluster_name}"
-  vpc_id                    = "${module.aws_resources_module_network.vpc_id}"
-  web_subnet_ids            = "${module.aws_resources_module_network.web_subnet_ids}"
-  public_subnet_ids         = "${module.aws_resources_module_network.public_subnet_ids}"
-  public_subnet_cidr_blocks = "${module.aws_resources_module_network.public_subnet_cidr_blocks}"
+  vpc_id                    = "${module.network.vpc_id}"
+  web_subnet_ids            = "${module.network.web_subnet_ids}"
+  public_subnet_ids         = "${module.network.public_subnet_ids}"
+  public_subnet_cidr_blocks = "${module.network.public_subnet_cidr_blocks}"
   ecs_instance_profile_name = "${module.aws_resources_module_iam_ecs.ecs_instance_profile_name}"
   override_instance_types   = ["t3.large", "t3a.large", "m5a.large", "m5.large"]
 }
@@ -135,9 +143,9 @@ module "aws_resources_module_ecs_service_nginx" {
   }
 
   common_tags                    = "${var.common_tags}"
-  vpc_id                         = "${module.aws_resources_module_network.vpc_id}"
-  public_subnet_ids              = "${module.aws_resources_module_network.public_subnet_ids}"
-  web_subnet_ids                 = "${module.aws_resources_module_network.web_subnet_ids}"
+  vpc_id                         = "${module.network.vpc_id}"
+  public_subnet_ids              = "${module.network.public_subnet_ids}"
+  web_subnet_ids                 = "${module.network.web_subnet_ids}"
   ecs_cluster_name               = "${module.aws_resources_module_ecs_cluster_ec2.ecs_cluster_name}"
   ecs_service_role_name          = "${module.aws_resources_module_iam_ecs.ecs_service_role_name}"
   ecs_task_execution_role_arn    = "${module.aws_resources_module_iam_ecs.ecs_task_execution_role_arn}"
